@@ -1,7 +1,7 @@
 <?php
 $host = 'synaptic_db_webPHP8';
 $user = 'synaptic_db_webPHP8';
-$pass = 'secrsynaptic_db_webPHP8et';
+$pass = 'synaptic_db_webPHP8';
 
 $conn = new mysqli($host, $user, $pass);
 

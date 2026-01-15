@@ -22,5 +22,5 @@ sudo docker ps
 # Access the container's shell:
 sudo docker exec -it my_container_name /bin/bash
 
-# Connect using MariaDB CLI inside container
-sudo docker-compose exec mariadb mariadb -u testuser -p -h localhost testdb
+# Connect using to MySQL CLI inside container
+sudo docker-compose exec db_webPHP8 db_webPHP8 -u testuser -p -h localhost testdb

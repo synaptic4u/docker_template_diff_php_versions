@@ -48,7 +48,8 @@ This Docker Compose configuration sets up a multi-container environment for runn
 
 ## Volumes
 
-- **db_data**: Named volume for persistent MySQL data storage shared between both database services
+- **db_data_php7**: Named volume for persistent MySQL data storage (PHP 7 database)
+- **db_data_php8**: Named volume for persistent MySQL data storage (PHP 8 database)
 
 ## Notes
 

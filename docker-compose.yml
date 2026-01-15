@@ -48,7 +48,7 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: synaptic_db_webPHP8
       MYSQL_USER: synaptic_db_webPHP8
-      MYSQL_PASSWORD: secrsynaptic_db_webPHP8et
+      MYSQL_PASSWORD: synaptic_db_webPHP8
     volumes:
       - db_data_php8:/var/lib/mysql
     ports:
