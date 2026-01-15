@@ -1,5 +1,3 @@
-
-
 # Stop and remove all containers
 sudo docker stop $(sudo docker ps -q)
 sudo docker rm $(sudo docker ps -aq)
@@ -25,4 +23,4 @@ sudo docker ps
 sudo docker exec -it my_container_name /bin/bash
 
 # Connect using MariaDB CLI inside container
-docker-compose exec mariadb mariadb -u testuser -p -h localhost testdb
+sudo docker-compose exec mariadb mariadb -u testuser -p -h localhost testdb
