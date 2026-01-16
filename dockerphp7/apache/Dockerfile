@@ -34,12 +34,29 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
        curl \
        gd
 
-RUN a2enmod rewrite
+RUN a2enmod rewrite headers
 
 # Set Apache DocumentRoot to /var/www/src
 RUN mkdir -p /var/www/src \
     && sed -ri 's!DocumentRoot /var/www/html!DocumentRoot /var/www/src/html!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri "s!<Directory /var/www/>!<Directory /var/www/src/html>!g" /etc/apache2/apache2.conf || true
+
+# Create Apache security headers configuration
+RUN echo '<IfModule mod_headers.c>' > /etc/apache2/conf-available/security-headers.conf && \
+    echo '  # Prevent MIME type sniffing' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  Header always set X-Content-Type-Options "nosniff"' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  # Enable XSS protection' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  Header always set X-XSS-Protection "1; mode=block"' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  # Clickjacking protection' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  # Content Security Policy' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo "  Header always set Content-Security-Policy \"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'\"" >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  # Referrer Policy' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  Header always set Referrer-Policy "strict-origin-when-cross-origin"' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  # Feature Policy / Permissions Policy' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"' >> /etc/apache2/conf-available/security-headers.conf && \
+    echo '</IfModule>' >> /etc/apache2/conf-available/security-headers.conf && \
+    a2enconf security-headers
 
 # Install Composer (from official composer image)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
