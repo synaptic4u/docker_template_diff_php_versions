@@ -29,10 +29,9 @@ This Docker Compose configuration sets up a multi-container environment for runn
 - **Purpose**: MySQL 8.0 database for PHP 7 application
 - **Container Name**: `synaptic_db_webPHP7`
 - **Image**: `mysql:8.0`
-- **Port Mapping**: Port 33067 (host) → Port 3306 (container)
-- **Credentials**: Root password: `rootpassword`
+- **Credentials**: Root password: `${MYSQL_ROOT_PASSWORD_PHP7}` (from .env)
 - **Database**: `synaptic_db_webPHP7`
-- **User**: `synaptic_db_webPHP7` / Password: `synaptic_db_webPHP7`
+- **User**: `synaptic_db_webPHP7` / Password: `${MYSQL_PASSWORD_PHP7}` (from .env)
 - **Restart Policy**: Restarts unless explicitly stopped
 
 ### db_webPHP8
@@ -40,10 +39,9 @@ This Docker Compose configuration sets up a multi-container environment for runn
 - **Purpose**: MySQL 8.0 database for PHP 8 application
 - **Container Name**: `synaptic_db_webPHP8`
 - **Image**: `mysql:8.0`
-- **Port Mapping**: Port 33068 (host) → Port 3306 (container)
-- **Credentials**: Root password: `rootpassword`
+- **Credentials**: Root password: `${MYSQL_ROOT_PASSWORD_PHP8}` (from .env)
 - **Database**: `synaptic_db_webPHP8`
-- **User**: `synaptic_db_webPHP8` / Password: `secrsynaptic_db_webPHP8et`
+- **User**: `synaptic_db_webPHP8` / Password: `${MYSQL_PASSWORD_PHP8}` (from .env)
 - **Restart Policy**: Restarts unless explicitly stopped
 
 ## Volumes
@@ -54,5 +52,7 @@ This Docker Compose configuration sets up a multi-container environment for runn
 ## Notes
 
 - Each web service has its own separate source code directory (dockerphp7/src and dockerphp8/src)
-- Both database services share the same volume for data persistence
-- **⚠️ Security Issue**: Hard-coded database credentials should be moved to environment variables or `.env` files
+- Each database service has its own separate named volume for data persistence
+- Database credentials are managed via `.env` file (copy `.env.example` to `.env` and update with secure passwords)
+- Database ports are not exposed to the host for security (containers communicate internally)
+- To connect to MySQL from host, use: `docker exec -it synaptic_db_webPHP7 mysql -u synaptic_db_webPHP7 -p`

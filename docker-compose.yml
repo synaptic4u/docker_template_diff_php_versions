@@ -10,6 +10,11 @@ services:
       - "8081:80"
     volumes:
       - ./dockerphp7/src:/var/www/src
+    environment:
+      - DB_HOST=synaptic_db_webPHP7
+      - DB_USER=${MYSQL_USER_PHP7}
+      - DB_PASSWORD=${MYSQL_PASSWORD_PHP7}
+      - DB_NAME=${MYSQL_DATABASE_PHP7}
     depends_on:
       - db_webPHP7
     restart: unless-stopped
@@ -23,6 +28,11 @@ services:
       - "8082:80"
     volumes:
       - ./dockerphp8/src:/var/www/src
+    environment:
+      - DB_HOST=synaptic_db_webPHP8
+      - DB_USER=${MYSQL_USER_PHP8}
+      - DB_PASSWORD=${MYSQL_PASSWORD_PHP8}
+      - DB_NAME=${MYSQL_DATABASE_PHP8}
     depends_on:
       - db_webPHP8
     restart: unless-stopped
@@ -32,27 +42,23 @@ services:
     container_name: synaptic_db_webPHP7
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: synaptic_db_webPHP7
-      MYSQL_USER: synaptic_db_webPHP7
-      MYSQL_PASSWORD: synaptic_db_webPHP7
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PHP7}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_PHP7}
+      MYSQL_USER: ${MYSQL_USER_PHP7}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP7}
     volumes:
       - db_data_php7:/var/lib/mysql
-    ports:
-      - "33067:3306"
   db_webPHP8:
     image: mysql:8.0
     container_name: synaptic_db_webPHP8
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: synaptic_db_webPHP8
-      MYSQL_USER: synaptic_db_webPHP8
-      MYSQL_PASSWORD: synaptic_db_webPHP8
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PHP8}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_PHP8}
+      MYSQL_USER: ${MYSQL_USER_PHP8}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP8}
     volumes:
       - db_data_php8:/var/lib/mysql
-    ports:
-      - "33068:3306"
 
 volumes:
   db_data_php7:
