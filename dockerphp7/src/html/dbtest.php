@@ -13,6 +13,7 @@ echo "<h2>PHP 7 - Database List</h2>";
 $result = $conn->query("SHOW DATABASES");
 
 if ($result) {
+    echo "<h3>Available Databases:</h3>";
     echo "<ul>";
     while ($row = $result->fetch_assoc()) {
         echo "<li>" . htmlspecialchars($row['Database']) . "</li>";
