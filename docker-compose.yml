@@ -17,6 +17,7 @@ services:
     container_name: synaptic_webPHP5
     ports:
       - "8080:80"
+      - "8443:443"
     volumes:
       - ./dockerphp5/src:/var/www/src
     environment:
@@ -29,6 +30,12 @@ services:
         condition: service_healthy
     networks:
       - backend_php5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php5.6,service=web"
     restart: unless-stopped
 
   web7:
@@ -38,6 +45,7 @@ services:
     container_name: synaptic_webPHP7
     ports:
       - "8081:80"
+      - "8444:443"
     volumes:
       - ./dockerphp7/src:/var/www/src
     environment:
@@ -50,6 +58,12 @@ services:
         condition: service_healthy
     networks:
       - backend_php7
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php7.4,service=web"
     restart: unless-stopped
 
   web8:
@@ -59,6 +73,7 @@ services:
     container_name: synaptic_webPHP8
     ports:
       - "8082:80"
+      - "8445:443"
     volumes:
       - ./dockerphp8/src:/var/www/src
     environment:
@@ -71,6 +86,12 @@ services:
         condition: service_healthy
     networks:
       - backend_php8
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php8.3,service=web"
     restart: unless-stopped
 
   db_webPHP5:
@@ -88,8 +109,15 @@ services:
       - "3306"
     volumes:
       - db_data_php5:/var/lib/mysql
+      - ./dockerphp5/db-init:/docker-entrypoint-initdb.d
     networks:
       - backend_php5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php5.6"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -109,8 +137,15 @@ services:
       - "3306"
     volumes:
       - db_data_php7:/var/lib/mysql
+      - ./dockerphp7/db-init:/docker-entrypoint-initdb.d
     networks:
       - backend_php7
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php7.4"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -130,8 +165,15 @@ services:
       - "3306"
     volumes:
       - db_data_php8:/var/lib/mysql
+      - ./dockerphp8/db-init:/docker-entrypoint-initdb.d
     networks:
       - backend_php8
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php8.3"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
