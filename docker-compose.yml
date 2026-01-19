@@ -1,4 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 version: '3.8'
+
+networks:
+  backend_php5:
+    driver: bridge
+  backend_php7:
+    driver: bridge
+  backend_php8:
+    driver: bridge
 
 services:
   web5:
@@ -11,13 +20,15 @@ services:
     volumes:
       - ./dockerphp5/src:/var/www/src
     environment:
-      - DB_HOST=synaptic_db_webPHP5
+      - DB_HOST=db_webPHP5
       - DB_USER=${MYSQL_USER_PHP5}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP5}
       - DB_NAME=${MYSQL_DATABASE_PHP5}
     depends_on:
       db_webPHP5:
         condition: service_healthy
+    networks:
+      - backend_php5
     restart: unless-stopped
 
   web7:
@@ -30,13 +41,15 @@ services:
     volumes:
       - ./dockerphp7/src:/var/www/src
     environment:
-      - DB_HOST=synaptic_db_webPHP7
+      - DB_HOST=db_webPHP7
       - DB_USER=${MYSQL_USER_PHP7}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP7}
       - DB_NAME=${MYSQL_DATABASE_PHP7}
     depends_on:
       db_webPHP7:
         condition: service_healthy
+    networks:
+      - backend_php7
     restart: unless-stopped
 
   web8:
@@ -49,13 +62,15 @@ services:
     volumes:
       - ./dockerphp8/src:/var/www/src
     environment:
-      - DB_HOST=synaptic_db_webPHP8
+      - DB_HOST=db_webPHP8
       - DB_USER=${MYSQL_USER_PHP8}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP8}
       - DB_NAME=${MYSQL_DATABASE_PHP8}
     depends_on:
       db_webPHP8:
         condition: service_healthy
+    networks:
+      - backend_php8
     restart: unless-stopped
 
   db_webPHP5:
@@ -69,8 +84,12 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE_PHP5}
       MYSQL_USER: ${MYSQL_USER_PHP5}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP5}
+    expose:
+      - "3306"
     volumes:
       - db_data_php5:/var/lib/mysql
+    networks:
+      - backend_php5
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -86,8 +105,12 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE_PHP7}
       MYSQL_USER: ${MYSQL_USER_PHP7}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP7}
+    expose:
+      - "3306"
     volumes:
       - db_data_php7:/var/lib/mysql
+    networks:
+      - backend_php7
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -103,8 +126,12 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE_PHP8}
       MYSQL_USER: ${MYSQL_USER_PHP8}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP8}
+    expose:
+      - "3306"
     volumes:
       - db_data_php8:/var/lib/mysql
+    networks:
+      - backend_php8
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

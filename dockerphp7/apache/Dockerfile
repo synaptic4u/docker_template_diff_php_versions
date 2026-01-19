@@ -65,6 +65,8 @@ WORKDIR /var/www/src
 
 RUN chown -R www-data:www-data /var/www/src
 
+USER www-data
+
 EXPOSE 80
 
 CMD ["apache2-foreground"]

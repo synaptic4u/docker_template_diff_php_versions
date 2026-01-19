@@ -1,8 +1,13 @@
 <?php
-$host = getenv('DB_HOST') ?: 'synaptic_db_webPHP8';
-$user = getenv('DB_USER') ?: 'synaptic_db_webPHP8';
-$pass = getenv('DB_PASSWORD') ?: 'synaptic_db_webPHP8';
-$db = getenv('DB_NAME') ?: 'synaptic_db_webPHP8';
+$host = getenv('DB_HOST');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASSWORD');
+$db = getenv('DB_NAME');
+
+if (!$host || !$user || !$pass || !$db) {
+    error_log('Database configuration missing');
+    die("Database configuration error");
+}
 
 // Add retry logic since MySQL may need time to start
 $conn = null;
@@ -23,7 +28,8 @@ while ($attempts < $max_attempts && !$conn) {
 }
 
 if (!$conn || $conn->connect_error) {
-    die("Connection failed after retries: " . ($conn ? $conn->connect_error : "Unable to create connection"));
+    error_log('Database connection failed after retries: ' . ($conn ? $conn->connect_error : "Unable to create connection"));
+    die("Database connection failed");
 }
 
 
