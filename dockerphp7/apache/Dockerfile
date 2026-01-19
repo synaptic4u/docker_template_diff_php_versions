@@ -34,7 +34,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
        curl \
        gd
 
-RUN a2enmod rewrite headers
+RUN a2enmod rewrite headers ssl
 
 # Set Apache DocumentRoot to /var/www/src
 RUN mkdir -p /var/www/src \
