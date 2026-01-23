@@ -22,6 +22,7 @@ This guide covers production deployment configurations for the multi-PHP Docker 
    ```
 
 2. **Generate certificates:**
+
    ```bash
    sudo certbot certonly --standalone -d legacy.example.com
    sudo certbot certonly --standalone -d api.example.com
@@ -29,11 +30,13 @@ This guide covers production deployment configurations for the multi-PHP Docker 
    ```
 
 3. **Create certificate directories:**
+
    ```bash
    sudo mkdir -p /var/containers/certs/{php5,php7,php8}
    ```
 
 4. **Copy certificates:**
+
    ```bash
    sudo cp /etc/letsencrypt/live/legacy.example.com/fullchain.pem /var/containers/certs/php5/certificate.crt
    sudo cp /etc/letsencrypt/live/legacy.example.com/privkey.pem /var/containers/certs/php5/private.key

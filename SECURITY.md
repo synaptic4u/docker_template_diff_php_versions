@@ -105,6 +105,7 @@ This document outlines the security improvements implemented in this Docker setu
    - Current setup allows all operations
    - Restrict MySQL users to only necessary tables
    - Example:
+
      ```sql
      GRANT SELECT, INSERT, UPDATE ON appdb_php8.* TO 'appuser'@'%';
      ```
