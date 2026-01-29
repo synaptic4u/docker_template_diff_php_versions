@@ -1,1 +1,8 @@
 .env
+
+# SSL certificates and private keys
+ssl/ca/ca-key.pem
+ssl/server/server-key.pem
+ssl/client/client-key.pem
+ssl/server/server-req.pem
+ssl/client/client-req.pem

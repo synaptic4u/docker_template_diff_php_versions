@@ -4,7 +4,6 @@
 
 - **[README.md](README.md)** - Main documentation and setup guide
 - **[SECURITY.md](SECURITY.md)** - Security configuration and best practices
-- **[PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md)** - Production deployment guide
 
 ---
 

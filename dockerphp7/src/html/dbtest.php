@@ -9,14 +9,28 @@ if (!$host || !$user || !$pass || !$db) {
     die("Database configuration error");
 }
 
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli();
+$conn->ssl_set(
+    getenv('DB_SSL_KEY'),
+    getenv('DB_SSL_CERT'), 
+    getenv('DB_SSL_CA'),
+    null,
+    null
+);
+$conn->real_connect($host, $user, $pass, $db, 3306, null, MYSQLI_CLIENT_SSL);
 
 if ($conn->connect_error) {
-    error_log('Database connection failed: ' . $conn->connect_error);
-    die("Database connection failed");
+    error_log('Database SSL connection failed: ' . $conn->connect_error);
+    die("Database SSL connection failed");
 }
 
-echo "<h2>PHP 7 - Database List</h2>";
+// Verify SSL connection
+$ssl_status = $conn->query("SHOW STATUS LIKE 'Ssl_cipher'");
+if ($ssl_status && $ssl_row = $ssl_status->fetch_assoc()) {
+    echo "<p><strong>SSL Cipher:</strong> " . htmlspecialchars($ssl_row['Value']) . "</p>";
+}
+
+echo "<h2>PHP 7 - Database List (SSL Encrypted)</h2>";
 $result = $conn->query("SHOW DATABASES");
 
 if ($result) {

@@ -4,7 +4,6 @@
 
 - **[README.md](README.md)** - Main documentation and setup guide
 - **[SECURITY.md](SECURITY.md)** - Security configuration and best practices
-- **[PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md)** - Production deployment guide
 
 ---
 
@@ -94,7 +93,7 @@ This document outlines the security improvements implemented in this Docker setu
 
 ## Recommended Additional Security Measures
 
-### For Production Deployment
+### For Development/Testing
 
 1. **Enable HTTPS/TLS**
    - Configure Apache with SSL certificates
@@ -113,7 +112,7 @@ This document outlines the security improvements implemented in this Docker setu
 3. **Secrets Management**
    - Use Docker Secrets (Swarm mode)
    - Use external secret management tools (HashiCorp Vault, etc.)
-   - Never pass sensitive data via environment variables in production
+   - For development, environment variables are acceptable
 
 4. **Network Security**
    - Implement firewall rules on host
