@@ -15,6 +15,18 @@ This Docker Compose configuration sets up a multi-container environment for runn
 
 ## Services
 
+### Services Connections
+
+- **PHP 5.6**:
+    <http://localhost:8080>
+    <https://localhost:8443>
+- **PHP 7**:
+    <http://localhost:8081>
+    <https://localhost:8444>
+- **PHP 8**:
+    <http://localhost:8082>
+    <https://localhost:8445>
+
 ### web5
 
 - **Purpose**: Apache web server running PHP 5.6
@@ -77,6 +89,18 @@ This Docker Compose configuration sets up a multi-container environment for runn
 - **User**: `${MYSQL_USER_PHP8}` / Password: `${MYSQL_PASSWORD_PHP8}` (from .env)
 - **Restart Policy**: Restarts unless explicitly stopped
 - **Networks**: `backend_php8`
+
+## Services Connections
+
+- **PHP 5.6**:
+    <http://localhost:8080>
+    <https://localhost:8443>
+- **PHP 7**:
+    <http://localhost:8081>
+    <https://localhost:8444>
+- **PHP 8**:
+    <http://localhost:8082>
+    <https://localhost:8445>
 
 ## Networks
 
