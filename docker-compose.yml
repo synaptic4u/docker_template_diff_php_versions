@@ -107,10 +107,10 @@ services:
     restart: unless-stopped
 
   db_webPHP5:
-    image: mysql:5.7
+    image: mysql:8.0
     # Alternative for PHP 5.6 compatibility: image: mysql:5.7
     container_name: synaptic_db_webPHP5
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PHP5}
