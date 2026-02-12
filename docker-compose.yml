@@ -1,4 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 version: '3.8'
+
+networks:
+  backend_php5:
+    driver: bridge
+  backend_php7:
+    driver: bridge
+  backend_php8:
+    driver: bridge
 
 services:
   web5:
@@ -7,17 +16,30 @@ services:
       dockerfile: dockerphp5/apache/Dockerfile
     container_name: synaptic_webPHP5
     ports:
-      - "8080:80"
+      - "8443:443"
     volumes:
       - ./dockerphp5/src:/var/www/src
+      - ./ssl/ca:/var/www/ssl/ca:ro
+      - ./ssl/client:/var/www/ssl/client:ro
     environment:
-      - DB_HOST=synaptic_db_webPHP5
+      - DB_HOST=db_webPHP5
       - DB_USER=${MYSQL_USER_PHP5}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP5}
       - DB_NAME=${MYSQL_DATABASE_PHP5}
+      - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
+      - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
+      - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
     depends_on:
       db_webPHP5:
         condition: service_healthy
+    networks:
+      - backend_php5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php5.6,service=web"
     restart: unless-stopped
 
   web7:
@@ -26,17 +48,30 @@ services:
       dockerfile: dockerphp7/apache/Dockerfile
     container_name: synaptic_webPHP7
     ports:
-      - "8081:80"
+      - "8444:443"
     volumes:
       - ./dockerphp7/src:/var/www/src
+      - ./ssl/ca:/var/www/ssl/ca:ro
+      - ./ssl/client:/var/www/ssl/client:ro
     environment:
-      - DB_HOST=synaptic_db_webPHP7
+      - DB_HOST=db_webPHP7
       - DB_USER=${MYSQL_USER_PHP7}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP7}
       - DB_NAME=${MYSQL_DATABASE_PHP7}
+      - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
+      - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
+      - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
     depends_on:
       db_webPHP7:
         condition: service_healthy
+    networks:
+      - backend_php7
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php7.4,service=web"
     restart: unless-stopped
 
   web8:
@@ -45,32 +80,59 @@ services:
       dockerfile: dockerphp8/apache/Dockerfile
     container_name: synaptic_webPHP8
     ports:
-      - "8082:80"
+      - "8445:443"
     volumes:
       - ./dockerphp8/src:/var/www/src
+      - ./ssl/ca:/var/www/ssl/ca:ro
+      - ./ssl/client:/var/www/ssl/client:ro
     environment:
-      - DB_HOST=synaptic_db_webPHP8
+      - DB_HOST=db_webPHP8
       - DB_USER=${MYSQL_USER_PHP8}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP8}
       - DB_NAME=${MYSQL_DATABASE_PHP8}
+      - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
+      - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
+      - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
     depends_on:
       db_webPHP8:
         condition: service_healthy
+    networks:
+      - backend_php8
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php8.3,service=web"
     restart: unless-stopped
 
   db_webPHP5:
-    image: mysql:8.0
+    image: mysql:5.7
     # Alternative for PHP 5.6 compatibility: image: mysql:5.7
     container_name: synaptic_db_webPHP5
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_unicode_ci
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PHP5}
       MYSQL_DATABASE: ${MYSQL_DATABASE_PHP5}
       MYSQL_USER: ${MYSQL_USER_PHP5}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP5}
+    expose:
+      - "3306"
     volumes:
       - db_data_php5:/var/lib/mysql
+      - ./dockerphp5/db-init:/docker-entrypoint-initdb.d
+      - ./ssl/ca:/etc/mysql/ssl/ca:ro
+      - ./ssl/server:/etc/mysql/ssl/server:ro
+      - ./dockerphp5/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
+    networks:
+      - backend_php5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php5.6"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -86,8 +148,22 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE_PHP7}
       MYSQL_USER: ${MYSQL_USER_PHP7}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP7}
+    expose:
+      - "3306"
     volumes:
       - db_data_php7:/var/lib/mysql
+      - ./dockerphp7/db-init:/docker-entrypoint-initdb.d
+      - ./ssl/ca:/etc/mysql/ssl/ca:ro
+      - ./ssl/server:/etc/mysql/ssl/server:ro
+      - ./dockerphp7/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
+    networks:
+      - backend_php7
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php7.4"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -103,8 +179,22 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE_PHP8}
       MYSQL_USER: ${MYSQL_USER_PHP8}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD_PHP8}
+    expose:
+      - "3306"
     volumes:
       - db_data_php8:/var/lib/mysql
+      - ./dockerphp8/db-init:/docker-entrypoint-initdb.d
+      - ./ssl/ca:/etc/mysql/ssl/ca:ro
+      - ./ssl/server:/etc/mysql/ssl/server:ro
+      - ./dockerphp8/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
+    networks:
+      - backend_php8
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "php_version=php8.3"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

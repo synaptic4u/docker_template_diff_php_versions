@@ -1,33 +1,37 @@
 <?php
-$host = getenv('DB_HOST') ?: 'synaptic_db_webPHP8';
-$user = getenv('DB_USER') ?: 'synaptic_db_webPHP8';
-$pass = getenv('DB_PASSWORD') ?: 'synaptic_db_webPHP8';
-$db = getenv('DB_NAME') ?: 'synaptic_db_webPHP8';
+$host = getenv('DB_HOST');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASSWORD');
+$db = getenv('DB_NAME');
 
-// Add retry logic since MySQL may need time to start
-$conn = null;
-$attempts = 0;
-$max_attempts = 10;
-
-while ($attempts < $max_attempts && !$conn) {
-    $conn = @new mysqli($host, $user, $pass, $db);
-    
-    if ($conn->connect_error) {
-        $attempts++;
-        if ($attempts < $max_attempts) {
-            sleep(2);
-        }
-    } else {
-        break;
-    }
+if (!$host || !$user || !$pass || !$db) {
+    error_log('Database configuration missing');
+    die("Database configuration error");
 }
 
-if (!$conn || $conn->connect_error) {
-    die("Connection failed after retries: " . ($conn ? $conn->connect_error : "Unable to create connection"));
+// SSL connection required
+$conn = new mysqli();
+$conn->ssl_set(
+    getenv('DB_SSL_KEY'),
+    getenv('DB_SSL_CERT'), 
+    getenv('DB_SSL_CA'),
+    null,
+    null
+);
+$conn->real_connect($host, $user, $pass, $db, 3306, null, MYSQLI_CLIENT_SSL);
+
+if ($conn->connect_error) {
+    error_log('Database SSL connection failed: ' . $conn->connect_error);
+    die("SSL connection required but failed: " . $conn->connect_error);
 }
 
+// Verify SSL connection
+$ssl_status = $conn->query("SHOW STATUS LIKE 'Ssl_cipher'");
+if ($ssl_status && $ssl_row = $ssl_status->fetch_assoc()) {
+    echo "<p><strong>SSL Cipher:</strong> " . htmlspecialchars($ssl_row['Value']) . "</p>";
+}
 
-echo "<h2>PHP 8 - Database List</h2>";
+echo "<h2>PHP 8 - Database List (SSL Encrypted)</h2>";
 
 $result = $conn->query("SHOW DATABASES");
 
