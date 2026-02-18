@@ -39,7 +39,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        labels: "php_version=php5.6,service=web"
+    labels:
+      - "php_version=php5.6"
+      - "service=web"
     restart: unless-stopped
 
   web7:
@@ -71,7 +73,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        labels: "php_version=php7.4,service=web"
+    labels:
+      - "php_version=php7.4"
+      - "service=web"
     restart: unless-stopped
 
   web8:
@@ -103,7 +107,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        labels: "php_version=php8.3,service=web"
+    labels:
+      - "php_version=php8.3"
+      - "service=web"
     restart: unless-stopped
 
   db_webPHP5:
@@ -132,8 +138,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        labels: "php_version=php5.6"
-    healthcheck:
+    labels:
+      - "php_version=php5.6"
+      healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
@@ -163,8 +170,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        labels: "php_version=php7.4"
-    healthcheck:
+    labels:
+      - "php_version=php7.4"
+      healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
@@ -194,8 +202,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        labels: "php_version=php8.3"
-    healthcheck:
+    labels:
+      - "php_version=php8.3"
+      healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
