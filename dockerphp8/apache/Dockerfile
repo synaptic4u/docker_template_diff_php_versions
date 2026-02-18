@@ -53,16 +53,16 @@ RUN echo '<VirtualHost *:80>' > /etc/apache2/sites-available/000-default-http.co
     echo '  ServerName localhost' >> /etc/apache2/sites-available/000-default-http.conf && \
     echo '  RewriteEngine On' >> /etc/apache2/sites-available/000-default-http.conf && \
     echo '  RewriteCond %{HTTPS} off' >> /etc/apache2/sites-available/000-default-http.conf && \
-    echo '  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]' >> /etc/apache2/sites-available/000-default-http.conf && \
+    # echo '  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]' >> /etc/apache2/sites-available/000-default-http.conf && \
     echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default-http.conf
 
 # Create SSL VirtualHost
 RUN echo '<VirtualHost *:443>' > /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '  ServerName localhost' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '  DocumentRoot /var/www/src/html' >> /etc/apache2/sites-available/000-default-ssl.conf && \
-    echo '  SSLEngine on' >> /etc/apache2/sites-available/000-default-ssl.conf && \
-    echo '  SSLCertificateFile /etc/apache2/ssl/certificate.crt' >> /etc/apache2/sites-available/000-default-ssl.conf && \
-    echo '  SSLCertificateKeyFile /etc/apache2/ssl/private.key' >> /etc/apache2/sites-available/000-default-ssl.conf && \
+    # echo '  SSLEngine on' >> /etc/apache2/sites-available/000-default-ssl.conf && \
+    # echo '  SSLCertificateFile /etc/apache2/ssl/certificate.crt' >> /etc/apache2/sites-available/000-default-ssl.conf && \
+    # echo '  SSLCertificateKeyFile /etc/apache2/ssl/private.key' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '  <Directory /var/www/src/html>' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '    AllowOverride All' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '    Require all granted' >> /etc/apache2/sites-available/000-default-ssl.conf && \

@@ -17,18 +17,19 @@ services:
     container_name: synaptic_webPHP5
     ports:
       - "8443:443"
+      - "8081:80"
     volumes:
       - ./dockerphp5/src:/var/www/src
-      - ./ssl/ca:/var/www/ssl/ca:ro
-      - ./ssl/client:/var/www/ssl/client:ro
+      # - ./ssl/ca:/var/www/ssl/ca:ro
+      # - ./ssl/client:/var/www/ssl/client:ro
     environment:
       - DB_HOST=db_webPHP5
       - DB_USER=${MYSQL_USER_PHP5}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP5}
       - DB_NAME=${MYSQL_DATABASE_PHP5}
-      - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
-      - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
-      - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
+      # - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
+      # - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
+      # - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
     depends_on:
       db_webPHP5:
         condition: service_healthy
@@ -49,18 +50,19 @@ services:
     container_name: synaptic_webPHP7
     ports:
       - "8444:443"
+      - "8082:80"
     volumes:
       - ./dockerphp7/src:/var/www/src
-      - ./ssl/ca:/var/www/ssl/ca:ro
-      - ./ssl/client:/var/www/ssl/client:ro
+      # - ./ssl/ca:/var/www/ssl/ca:ro
+      # - ./ssl/client:/var/www/ssl/client:ro
     environment:
       - DB_HOST=db_webPHP7
       - DB_USER=${MYSQL_USER_PHP7}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP7}
       - DB_NAME=${MYSQL_DATABASE_PHP7}
-      - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
-      - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
-      - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
+      # - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
+      # - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
+      # - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
     depends_on:
       db_webPHP7:
         condition: service_healthy
@@ -81,18 +83,19 @@ services:
     container_name: synaptic_webPHP8
     ports:
       - "8445:443"
+      - "8083:80"
     volumes:
       - ./dockerphp8/src:/var/www/src
-      - ./ssl/ca:/var/www/ssl/ca:ro
-      - ./ssl/client:/var/www/ssl/client:ro
+      # - ./ssl/ca:/var/www/ssl/ca:ro
+      # - ./ssl/client:/var/www/ssl/client:ro
     environment:
       - DB_HOST=db_webPHP8
       - DB_USER=${MYSQL_USER_PHP8}
       - DB_PASSWORD=${MYSQL_PASSWORD_PHP8}
       - DB_NAME=${MYSQL_DATABASE_PHP8}
-      - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
-      - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
-      - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
+      # - DB_SSL_CA=/var/www/ssl/ca/ca-cert.pem
+      # - DB_SSL_CERT=/var/www/ssl/client/client-cert.pem
+      # - DB_SSL_KEY=/var/www/ssl/client/client-key.pem
     depends_on:
       db_webPHP8:
         condition: service_healthy
@@ -122,9 +125,9 @@ services:
     volumes:
       - db_data_php5:/var/lib/mysql
       - ./dockerphp5/db-init:/docker-entrypoint-initdb.d
-      - ./ssl/ca:/etc/mysql/ssl/ca:ro
-      - ./ssl/server:/etc/mysql/ssl/server:ro
-      - ./dockerphp5/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
+      # - ./ssl/ca:/etc/mysql/ssl/ca:ro
+      # - ./ssl/server:/etc/mysql/ssl/server:ro
+      # - ./dockerphp5/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
     networks:
       - backend_php5
     logging:
@@ -153,9 +156,9 @@ services:
     volumes:
       - db_data_php7:/var/lib/mysql
       - ./dockerphp7/db-init:/docker-entrypoint-initdb.d
-      - ./ssl/ca:/etc/mysql/ssl/ca:ro
-      - ./ssl/server:/etc/mysql/ssl/server:ro
-      - ./dockerphp7/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
+      # - ./ssl/ca:/etc/mysql/ssl/ca:ro
+      # - ./ssl/server:/etc/mysql/ssl/server:ro
+      # - ./dockerphp7/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
     networks:
       - backend_php7
     logging:
@@ -184,9 +187,9 @@ services:
     volumes:
       - db_data_php8:/var/lib/mysql
       - ./dockerphp8/db-init:/docker-entrypoint-initdb.d
-      - ./ssl/ca:/etc/mysql/ssl/ca:ro
-      - ./ssl/server:/etc/mysql/ssl/server:ro
-      - ./dockerphp8/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
+      # - ./ssl/ca:/etc/mysql/ssl/ca:ro
+      # - ./ssl/server:/etc/mysql/ssl/server:ro
+      # - ./dockerphp8/mysql-ssl.cnf:/etc/mysql/conf.d/ssl.cnf:ro
     networks:
       - backend_php8
     logging:

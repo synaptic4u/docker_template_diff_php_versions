@@ -11,13 +11,13 @@ if (!$host || !$user || !$pass || !$db) {
 
 // SSL connection required
 $conn = new mysqli();
-$conn->ssl_set(
-    getenv('DB_SSL_KEY'),
-    getenv('DB_SSL_CERT'), 
-    getenv('DB_SSL_CA'),
-    null,
-    null
-);
+// $conn->ssl_set(
+//     getenv('DB_SSL_KEY'),
+//     getenv('DB_SSL_CERT'), 
+//     getenv('DB_SSL_CA'),
+//     null,
+//     null
+// );
 $ssl_result = $conn->real_connect($host, $user, $pass, $db, 3306, null, MYSQLI_CLIENT_SSL);
 
 if (!$ssl_result) {

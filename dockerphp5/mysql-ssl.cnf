@@ -1,5 +1,0 @@
-[mysqld]
-ssl-ca=/etc/mysql/ssl/ca/ca-cert.pem
-ssl-cert=/etc/mysql/ssl/server/server-cert.pem
-ssl-key=/etc/mysql/ssl/server/server-key.pem
-require_secure_transport=ON

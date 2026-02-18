@@ -40,12 +40,12 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 RUN a2enmod rewrite headers ssl
 
-# Create SSL certificate directory and self-signed certificate
-RUN mkdir -p /etc/apache2/ssl && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-      -keyout /etc/apache2/ssl/private.key \
-      -out /etc/apache2/ssl/certificate.crt \
-      -subj "/CN=localhost" 2>/dev/null
+# # Create SSL certificate directory and self-signed certificate
+# RUN mkdir -p /etc/apache2/ssl && \
+#     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+#       -keyout /etc/apache2/ssl/private.key \
+#       -out /etc/apache2/ssl/certificate.crt \
+#       -subj "/CN=localhost" 2>/dev/null
 
 # Set Apache DocumentRoot to /var/www/src
 RUN mkdir -p /var/www/src \
@@ -57,24 +57,23 @@ RUN echo '<VirtualHost *:80>' > /etc/apache2/sites-available/000-default-http.co
     echo '  ServerName localhost' >> /etc/apache2/sites-available/000-default-http.conf && \
     echo '  RewriteEngine On' >> /etc/apache2/sites-available/000-default-http.conf && \
     echo '  RewriteCond %{HTTPS} off' >> /etc/apache2/sites-available/000-default-http.conf && \
-    echo '  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]' >> /etc/apache2/sites-available/000-default-http.conf && \
+   # echo '  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]' >> /etc/apache2/sites-available/000-default-http.conf && \
     echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default-http.conf
 
 # Create SSL VirtualHost
 RUN echo '<VirtualHost *:443>' > /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '  ServerName localhost' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '  DocumentRoot /var/www/src/html' >> /etc/apache2/sites-available/000-default-ssl.conf && \
-    echo '  SSLEngine on' >> /etc/apache2/sites-available/000-default-ssl.conf && \
-    echo '  SSLCertificateFile /etc/apache2/ssl/certificate.crt' >> /etc/apache2/sites-available/000-default-ssl.conf && \
-    echo '  SSLCertificateKeyFile /etc/apache2/ssl/private.key' >> /etc/apache2/sites-available/000-default-ssl.conf && \
+    # echo '  SSLEngine on' >> /etc/apache2/sites-available/000-default-ssl.conf && \
+    # echo '  SSLCertificateFile /etc/apache2/ssl/certificate.crt' >> /etc/apache2/sites-available/000-default-ssl.conf && \
+    # echo '  SSLCertificateKeyFile /etc/apache2/ssl/private.key' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '  <Directory /var/www/src/html>' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '    AllowOverride All' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '    Require all granted' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '  </Directory>' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default-ssl.conf && \
     a2ensite 000-default-http && \
-    a2ensite 000-default-ssl && \
-    a2dissite 000-default
+    a2ensite 000-default-ssl
 
 # Create Apache security headers configuration
 RUN echo '<IfModule mod_headers.c>' > /etc/apache2/conf-available/security-headers.conf && \
